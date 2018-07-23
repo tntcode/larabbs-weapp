@@ -181,7 +181,7 @@
           wepy.setStorageSync('access_token', registerResponse.data.meta.access_token)
           wepy.setStorageSync('access_token_expired_at', new Date().getTime() + registerResponse.data.meta.expires_in * 1000)
           // 设置用户信息
-          wepy.setStorageSync('userInfo', registerResponse.data)
+          wepy.setStorageSync('user', registerResponse.data)
 
           wepy.showToast({
             title: '注册成功',
@@ -191,7 +191,7 @@
           // 跳转到我的页面
           setTimeout(function() {
             wepy.switchTab({
-              url: '/pages/user'
+              url: '/pages/users/me'
             })
           }, 2000)
         }
