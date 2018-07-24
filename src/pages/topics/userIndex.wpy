@@ -39,5 +39,11 @@
       // 调用组件 loadMore 方法
       this.$invoke('topiclist', 'loadMore')
     }
+    // 检测是否需要刷新页面（删除文章后返回）
+    onShow() {
+      this.$parent.checkRefreshPages(this.getCurrentPages().pop().route, () => {
+        this.$invoke('topiclist', 'reload')
+      })
+    }
   }
 </script>
