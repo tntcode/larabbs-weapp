@@ -15,6 +15,13 @@ page{
 .topic-title {
   padding: 15px;
 }
+.create-reply {
+  width: 40px;
+  height: 40px;
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+}
 </style>
 <template>
   <view class="page">
@@ -71,6 +78,10 @@ page{
           </navigator>
         </view>
       </view>
+      <!-- 回复按钮 -->
+      <navigator url="/pages/replies/create?topic_id={{ topic.id }}">
+        <image src="/images/reply.png" class="create-reply" />
+      </navigator>
     </view>
   </view>
 </template>
@@ -175,6 +186,7 @@ page{
       }
     }
 
+    // 如果已打开的页面包含话题列表，则页面加入到全局的需刷新列表
     refreshTopics() {
       // 设置全局变量，控制列表刷新，getCurrentPages为小程序提供的方法，获取当前已打开的页面
       let pages = this.getCurrentPages()
@@ -198,6 +210,13 @@ page{
       // 获取当前登录用户
       this.user = await this.$parent.getCurrentUser()
       this.$apply()
+    }
+
+    async onShow() {
+      let pages = this.getCurrentPages()
+      this.$parent.checkRefreshPages(pages[pages.length - 1].route, () => {
+        this.getTopic(this.topic.id)
+      })
     }
   }
 </script>
