@@ -128,21 +128,7 @@ page{
             icon: 'success'
           })
 
-          // 设置全局变量，控制列表刷新，getCurrentPages为小程序提供的方法，获取当前已打开的页面
-          let pages = this.getCurrentPages()
-          // 如果有上一页
-          if (pages.length > 1) {
-            // 检查所有已经打开的页面，如果是话题列表页面就记录下来
-            let refreshPages = []
-            pages.forEach((page) => {
-              // 已打开的页面中包换 话题列表 或 用户的话题列表
-              if (page.route === 'pages/topics/index' || page.route === 'pages/topics/userIndex') {
-                refreshPages.push(page.route)
-              }
-            })
-            this.$parent.globalData.refreshPages = this.$parent.globalData.refreshPages.concat(refreshPages)
-            this.$apply()
-          }
+          this.refreshTopics()
 
           setTimeout(function() {
             wepy.navigateBack()
@@ -175,7 +161,7 @@ page{
         }
 
         if (topicResponse.statusCode === 404) {
-          this.$parent.global.topicRefresh = true
+          this.refreshTopics()
           wepy.navigateBack()
         }
 
@@ -188,6 +174,25 @@ page{
         })
       }
     }
+
+    refreshTopics() {
+      // 设置全局变量，控制列表刷新，getCurrentPages为小程序提供的方法，获取当前已打开的页面
+      let pages = this.getCurrentPages()
+      // 如果有上一页
+      if (pages.length > 1) {
+        // 检查所有已经打开的页面，如果是话题列表页面就记录下来
+        let refreshPages = []
+        pages.forEach((page) => {
+          // 已打开的页面中包换 话题列表 或 用户的话题列表
+          if (page.route === 'pages/topics/index' || page.route === 'pages/topics/userIndex') {
+            refreshPages.push(page.route)
+          }
+        })
+        this.$parent.globalData.refreshPages = this.$parent.globalData.refreshPages.concat(refreshPages)
+        this.$apply()
+      }
+    }
+
     async onLoad(options) {
       this.getTopic(options.id)
       // 获取当前登录用户
